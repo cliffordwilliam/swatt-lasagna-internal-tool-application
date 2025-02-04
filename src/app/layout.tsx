@@ -9,7 +9,7 @@ import * as React from "react";
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <html lang="en" suppressHydrationWarning>
         <body>
           <InitColorSchemeScript attribute="class" />
