@@ -2,10 +2,16 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isPublicRoute = createRouteMatcher(["/sign-in(.*)"]);
 
-export default clerkMiddleware(async (auth, request) => {
+const clerkAuthMiddleware = clerkMiddleware({
+  authorizedParties: ["https://swattlasagna.com"],
+});
+
+export default clerkMiddleware(async (auth, request, event) => {
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
+
+  return clerkAuthMiddleware(request, event);
 });
 
 export const config = {
