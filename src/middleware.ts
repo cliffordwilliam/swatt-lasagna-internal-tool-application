@@ -7,9 +7,6 @@ const clerkAuthMiddleware = clerkMiddleware({
 });
 
 export default clerkMiddleware(async (auth, request, event) => {
-  const { userId, redirectToSignIn } = await auth()
-  if (!userId) return redirectToSignIn()
-
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
