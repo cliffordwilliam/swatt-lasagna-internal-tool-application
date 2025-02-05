@@ -1,4 +1,4 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
 const clerkAuthMiddleware = clerkMiddleware({
   authorizedParties: ['https://swattlasagna.com', 'https://www.swattlasagna.com'],
