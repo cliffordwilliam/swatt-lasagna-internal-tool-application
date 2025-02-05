@@ -1,9 +1,6 @@
 import ModeSwitch from "@/components/ModeSwitch";
 import theme from "@/theme";
-import {
-  ClerkProvider, SignedIn, SignedOut, RedirectToSignIn,
-  UserButton,
-} from '@clerk/nextjs'
+import { ClerkProvider } from '@clerk/nextjs'
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
@@ -21,13 +18,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
               <ModeSwitch />
-              <SignedIn>
-                <UserButton />
-                {props.children}
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn />
-              </SignedOut>
+              {props.children}
             </ThemeProvider>
           </AppRouterCacheProvider>
         </body>
