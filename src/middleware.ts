@@ -1,6 +1,8 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
 
-export default clerkMiddleware()
+export default clerkMiddleware({
+  authorizedParties: ['https://swattlasagna.com', 'https://www.swattlasagna.com'],
+})
 
 export const config = {
   matcher: [
