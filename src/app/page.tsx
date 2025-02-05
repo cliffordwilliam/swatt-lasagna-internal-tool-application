@@ -1,6 +1,5 @@
 import Copyright from "@/components/Copyright";
 import ProTip from "@/components/ProTip";
-import { UserButton } from "@clerk/nextjs";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
@@ -19,7 +18,6 @@ export default function Home() {
           alignItems: "center",
         }}
       >
-        <UserButton />
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           Material UI - Next.js App Router example in TypeScript
         </Typography>
