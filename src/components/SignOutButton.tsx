@@ -1,13 +1,21 @@
 'use client'
 
 import { useClerk } from '@clerk/nextjs'
+import { Button } from '@mui/material'
+import { useRouter } from 'next/navigation'
 
 export const SignOutButton = () => {
   const { signOut } = useClerk()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    await signOut() // Sign out the user
+    router.push('/sign-in') // Redirect to the sign-in page
+  }
 
   return (
-    // Clicking this button signs out a user
-    // and redirects them to the home page "/sign-in".
-    <button onClick={() => signOut({ redirectUrl: '/sign-in' })}>Sign out</button>
+    <Button variant="outlined" color="error" onClick={handleSignOut}>
+      Sign Out
+    </Button>
   )
 }
