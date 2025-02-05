@@ -21,8 +21,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
               <SignedIn>
                 {/* todo: create dashboard layout here not just user button */}
                 <UserButton />
+                {props.children}
               </SignedIn>
-              {props.children}
             </ThemeProvider>
           </AppRouterCacheProvider>
         </body>
