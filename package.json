@@ -9,24 +9,31 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.11.0",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@mui/icons-material": "next",
-    "@mui/material": "next",
-    "@mui/material-nextjs": "next",
-    "next": "15.1.6",
+    "@mui/icons-material": "latest",
+    "@mui/material": "latest",
+    "@mui/material-nextjs": "latest",
+    "next": "^15.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@clerk/nextjs": "^6.11.0",
+    "@prisma/client": "^6.3.1",
+    "@prisma/extension-accelerate": "^1.2.1",
+    "recharts": "^2.15.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@types/node": "latest",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "latest",
-    "eslint-config-next": "15.1.6",
-    "typescript": "latest"
+    "eslint-config-next": "^15.0.0",
+    "typescript": "latest",
+    "@eslint/eslintrc": "^3",
+    "prisma": "^6.3.1"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

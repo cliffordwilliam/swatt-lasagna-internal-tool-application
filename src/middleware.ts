@@ -1,8 +1,17 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-const clerkAuthMiddleware = clerkMiddleware({
-  authorizedParties: ['https://swattlasagna.com', 'https://www.swattlasagna.com'],
-});
+const isProduction = process.env.NODE_ENV === "production";
+
+const clerkAuthMiddleware = clerkMiddleware(
+  isProduction
+    ? {
+        authorizedParties: [
+          "https://swattlasagna.com",
+          "https://www.swattlasagna.com",
+        ],
+      }
+    : {}
+);
 
 export default clerkMiddleware(async (auth, request, event) => {
   await auth.protect();

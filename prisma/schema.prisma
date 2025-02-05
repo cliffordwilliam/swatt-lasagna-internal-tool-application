@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id        String   @id @default(cuid())
+  name      String
+  price     Int
+  orders    OrderItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id              String         @id @default(cuid())
+  buyer           Person         @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Restrict)
+  buyerId         String
+  recipient       Person         @relation("RecipientOrders", fields: [recipientId], references: [id], onDelete: Restrict)
+  recipientId     String
+  orderDate       DateTime
+  deliveryDate    DateTime
+  totalPurchase   Int
+  pickupDelivery  PickupDelivery @relation(fields: [pickupDeliveryId], references: [id])
+  pickupDeliveryId String
+  shippingCost    Int
+  grandTotal      Int
+  payment         Payment  @relation(fields: [paymentId], references: [id])
+  paymentId       String
+  items           OrderItem[]
+  status          OrderStatus @relation(fields: [orderStatusId], references: [id])
+  orderStatusId   String
+  note            String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([orderDate])
+  @@index([orderStatusId])
+}
+
+model OrderItem {
+  quantity Int   @default(1)
+  order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId  String
+  item     Item  @relation(fields: [itemId], references: [id])
+  itemId   String
+
+  @@id([orderId, itemId])
+}
+
+model Person {
+  id              String   @id @default(cuid())
+  name            String
+  address         String
+  phoneNumber     String   @unique
+  buyerOrders     Order[]  @relation("BuyerOrders")
+  recipientOrders Order[]  @relation("RecipientOrders")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PickupDelivery {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderStatus {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
