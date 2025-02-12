@@ -1,10 +1,12 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware({
-  authorizedParties: [
-    "https://swattlasagna.com",
-    "https://www.swattlasagna.com",
-  ],
+  ...(process.env.NEXT_PUBLIC_NODE_ENV !== "development" && {
+    authorizedParties: [
+      "https://swattlasagna.com",
+      "https://www.swattlasagna.com",
+    ],
+  }),
 });
 
 export const config = {
