@@ -1,11 +1,3 @@
-export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0, // Indonesian Rupiah usually doesn't use decimal points
-  });
-};
-
 export const formatDateToLocal = (
   dateStr: string,
   locale: string = "id-ID"

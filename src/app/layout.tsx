@@ -3,21 +3,14 @@ import {
   SignInButton,
   SignedIn,
   SignedOut,
-  UserButton,
 } from "@clerk/nextjs";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import CssBaseline from "@mui/material/CssBaseline";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import { ThemeProvider } from "@mui/material/styles";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import theme from "../theme";
+import SideNav from "./ui/dashboard/sidenav";
 
 export const metadata: Metadata = {
   title: "Clerk Next.js Quickstart",
@@ -31,19 +24,23 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-              {children}
-            </SignedIn>
-          </header>
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </head>
+        <body>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <InitColorSchemeScript attribute="class" />
+            <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <SideNav>{children}</SideNav>
+              </ThemeProvider>
+            </AppRouterCacheProvider>
+          </SignedIn>
         </body>
       </html>
     </ClerkProvider>

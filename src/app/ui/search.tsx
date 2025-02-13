@@ -1,5 +1,7 @@
 "use client";
 
+import { SearchRounded } from "@mui/icons-material";
+import { FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -24,18 +26,25 @@ export default function Search({ placeholder }: { placeholder: string }) {
   }, 300);
 
   return (
-    <div className="relative flex flex-1 flex-shrink-0">
-      <label htmlFor="search" className="sr-only">
-        Search
-      </label>
-      <input
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+    <FormControl variant="outlined">
+      <OutlinedInput
+        size="small"
+        id="search"
+        sx={{ flexGrow: 1 }}
+        startAdornment={
+          <InputAdornment position="start" sx={{ color: "text.primary" }}>
+            <SearchRounded fontSize="small" />
+          </InputAdornment>
+        }
+        inputProps={{
+          "aria-label": "search",
+        }}
         placeholder={placeholder}
         onChange={(e) => {
           handleSearch(e.target.value);
         }}
         defaultValue={searchParams.get("query")?.toString()}
       />
-    </div>
+    </FormControl>
   );
 }
