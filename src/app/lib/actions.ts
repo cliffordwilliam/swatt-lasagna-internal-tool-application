@@ -1,14 +1,24 @@
 export type State = {
   errors?: {
-    customerId?: string[];
-    amount?: string[];
-    status?: string[];
+    shippingCost?: string[];
+    totalPurchase?: string[];
   };
   message?: string | null;
 };
 
 export async function createOrder(prevState: State, formData: FormData) {
-  console.log(formData);
+  console.log(formData.get("buyerId"));
+  console.log(formData.get("recipientId"));
+  console.log(formData.get("orderDate"));
+  console.log(formData.get("deliveryDate"));
+  console.log(formData.get("totalPurchase"));
+  console.log(formData.get("pickupDeliveryId"));
+  console.log(formData.get("shippingCost"));
+  console.log(formData.get("grandTotal"));
+  console.log(formData.get("paymentId"));
+  console.log(formData.get("statusId"));
+  console.log(formData.get("items[]"));
+  console.log(formData.get("note"));
   return prevState;
 
   // //todo

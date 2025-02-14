@@ -26,7 +26,7 @@ export default async function Page(props: {
     <Stack spacing={2}>
       <Stack direction="row" sx={{ gap: 1 }}>
         <Search placeholder="Search invoices..." />
-        <Button variant="contained" href="/dashboard/orders/create">
+        <Button variant="contained" href="/orders/create">
           Add
         </Button>
       </Stack>

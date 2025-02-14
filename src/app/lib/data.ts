@@ -1,11 +1,38 @@
 import prisma from "@/lib/prisma";
 
-export async function fetchLatestItems() {
+export async function fetchItems() {
   try {
     return await prisma.item.findMany();
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch the latest items.");
+    throw new Error("Failed to fetch the items.");
+  }
+}
+
+export async function fetchPickupDelivery() {
+  try {
+    return await prisma.pickupDelivery.findMany();
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch the pickup deliveries.");
+  }
+}
+
+export async function fetchPayments() {
+  try {
+    return await prisma.payment.findMany();
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch the payments.");
+  }
+}
+
+export async function fetchOrderstatuses() {
+  try {
+    return await prisma.orderStatus.findMany();
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch the order statuses.");
   }
 }
 

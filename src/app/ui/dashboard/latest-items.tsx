@@ -1,4 +1,4 @@
-import { fetchLatestItems } from "@/app/lib/data";
+import { fetchItems } from "@/app/lib/data";
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -8,7 +8,7 @@ import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 
 export default async function LatestItems() {
-  const latestItems = await fetchLatestItems();
+  const latestItems = await fetchItems();
 
   return (
     <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>

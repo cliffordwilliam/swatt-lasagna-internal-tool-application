@@ -21,10 +21,13 @@
     "@mui/icons-material": "^6.4.4",
     "@mui/material": "^6.4.4",
     "@mui/material-nextjs": "^6.4.3",
+    "@mui/x-date-pickers": "^7.26.0",
     "@prisma/extension-accelerate": "^1.2.1",
+    "dayjs": "^1.11.13",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-number-format": "^5.4.3",
     "use-debounce": "^10.0.4"
   },
   "devDependencies": {
