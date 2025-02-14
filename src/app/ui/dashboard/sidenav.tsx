@@ -20,6 +20,8 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import * as React from "react";
 import ColorModeIconDropdown from "../color-mode-icon-dropdown";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const drawerWidth = 240;
 
@@ -151,7 +153,9 @@ export default function SideNav({ children }: LayoutProps) {
         }}
       >
         <Toolbar />
-        {children}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {children}
+        </LocalizationProvider>
       </Box>
     </Box>
   );

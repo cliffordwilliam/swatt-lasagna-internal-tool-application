@@ -12,16 +12,12 @@ import { Delete } from "@mui/icons-material";
 import {
   Alert,
   Autocomplete,
-  Box,
   Button,
   IconButton,
   Stack,
   TextField,
 } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useActionState, useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 
@@ -41,16 +37,15 @@ export default function Form({
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createOrder, initialState);
   const [selectedItems, setSelectedItems] = useState<
-    { id: string; quantity: number }[]
+    { id: string; quantity: string }[]
   >([]);
   const [totalPurchase, setTotalPurchase] = useState(0);
   const [shippingCost, setShippingCost] = useState("");
-  const [note, setNote] = useState("");
 
   useEffect(() => {
     const total = selectedItems.reduce((sum, selectedItem) => {
       const item = items.find((i) => i.id === selectedItem.id);
-      return sum + (item ? item.price * selectedItem.quantity : 0);
+      return sum + (item ? item.price * Number(selectedItem.quantity) : 0);
     }, 0);
     setTotalPurchase(total);
   }, [selectedItems, items]);
@@ -58,7 +53,7 @@ export default function Form({
   const handleItemChange = (value: string) => {
     const itemId = value;
     if (!selectedItems.find((item) => item.id === itemId)) {
-      setSelectedItems([...selectedItems, { id: itemId, quantity: 1 }]);
+      setSelectedItems([...selectedItems, { id: itemId, quantity: "" }]);
     }
   };
 
@@ -66,7 +61,7 @@ export default function Form({
     const quantityOnlyDigit = quantity.replace(/\D/g, "");
     setSelectedItems(
       selectedItems.map((item) =>
-        item.id === id ? { ...item, quantity: Number(quantityOnlyDigit) } : item
+        item.id === id ? { ...item, quantity: quantityOnlyDigit || "" } : item
       )
     );
   };
@@ -76,167 +71,93 @@ export default function Form({
   };
 
   return (
-    <Box
-      component="form"
-      action={formAction}
-      noValidate
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: 2,
-      }}
-    >
+    <Stack component="form" action={formAction} noValidate gap={2}>
       {/* Buyer */}
       <Autocomplete
-        disablePortal
         options={peoples}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        renderInput={(params) => <TextField {...params} label="Buyer" />}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            const input = document.getElementById(
-              "buyerId"
-            ) as HTMLInputElement;
-            if (input) input.value = newValue.id;
-          }
-        }}
+        renderInput={(params) => (
+          <TextField {...params} name="buyerId" label="Buyer" />
+        )}
       />
-      <input type="hidden" name="buyerId" id="buyerId" value={peoples[0]?.id} />
 
       {/* Recipient */}
       <Autocomplete
-        disablePortal
         options={peoples}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        renderInput={(params) => <TextField {...params} label="Recipient" />}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            const input = document.getElementById(
-              "recipientId"
-            ) as HTMLInputElement;
-            if (input) input.value = newValue.id;
-          }
-        }}
-      />
-      <input
-        type="hidden"
-        name="recipientId"
-        id="recipientId"
-        value={peoples[0]?.id}
+        renderInput={(params) => (
+          <TextField {...params} name="recipientId" label="Recipient" />
+        )}
       />
 
       {/* Order date */}
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker label="Order date" name="orderDate" />
-        </DemoContainer>
-      </LocalizationProvider>
+      <DatePicker label="Order date" name="orderDate" />
 
       {/* Delivery date */}
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={["DatePicker"]}>
-          <DatePicker label="Delivery date" name="deliveryDate" />
-        </DemoContainer>
-      </LocalizationProvider>
+      <DatePicker label="Delivery date" name="deliveryDate" />
 
       {/* Pickup delivery */}
       <Autocomplete
-        disablePortal
         options={pickupDeliveries}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
-          <TextField {...params} label="Pickup deliveries" />
+          <TextField
+            {...params}
+            name="pickupDeliveryId"
+            label="Pickup deliveries"
+          />
         )}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            const input = document.getElementById(
-              "pickupDeliveryId"
-            ) as HTMLInputElement;
-            if (input) input.value = newValue.id;
-          }
-        }}
-      />
-      <input
-        type="hidden"
-        name="pickupDeliveryId"
-        id="pickupDeliveryId"
-        value={pickupDeliveries[0]?.id}
       />
 
       {/* Shipping cost */}
-      <TextField
-        // Type number is bugged, so use text but regex str nums only
-        id="shippingCost"
-        label="Shipping cost"
+      <NumericFormat
         name="shippingCost"
-        slotProps={{
-          inputLabel: {
-            shrink: true,
-          },
-        }}
+        displayType="input"
+        thousandSeparator="."
+        decimalSeparator=","
+        prefix="Rp "
+        customInput={TextField}
+        label="Shipping cost"
         error={!!state.errors?.shippingCost}
         helperText={state.errors?.shippingCost?.[0]}
         onChange={(e) => {
           const digitOnly = e.target.value.replace(/\D/g, "");
           setShippingCost(digitOnly || "");
         }}
-        value={shippingCost}
+        isAllowed={(values) =>
+          values.value === "" || parseInt(values.value) > 0
+        }
       />
 
       {/* Payment */}
       <Autocomplete
-        disablePortal
         options={payments}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        renderInput={(params) => <TextField {...params} label="Payment" />}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            const input = document.getElementById(
-              "paymentId"
-            ) as HTMLInputElement;
-            if (input) input.value = newValue.id;
-          }
-        }}
-      />
-      <input
-        type="hidden"
-        name="paymentId"
-        id="paymentId"
-        value={payments[0]?.id}
+        renderInput={(params) => (
+          <TextField {...params} name="paymentId" label="Payment" />
+        )}
       />
 
       {/* Status */}
       <Autocomplete
-        disablePortal
         options={statuses}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        renderInput={(params) => <TextField {...params} label="Status" />}
-        onChange={(event, newValue) => {
-          if (newValue) {
-            const input = document.getElementById(
-              "statusId"
-            ) as HTMLInputElement;
-            if (input) input.value = newValue.id;
-          }
-        }}
-      />
-      <input
-        type="hidden"
-        name="statusId"
-        id="statusId"
-        value={statuses[0]?.id}
+        renderInput={(params) => (
+          <TextField {...params} name="statusId" label="Status" />
+        )}
       />
 
       {/* Item Selection */}
       <Autocomplete
-        disablePortal
-        options={items}
+        options={items.sort((a, b) =>
+          a.name.split(" ")[0].localeCompare(b.name.split(" ")[0])
+        )}
+        groupBy={(option) => option.name.split(" ")[0]}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => <TextField {...params} label="Item" />}
@@ -257,18 +178,19 @@ export default function Form({
             }
             disabled
           />
-          <TextField
-            label="Quantity"
-            type="number"
+          <NumericFormat
             value={selectedItem.quantity}
-            onChange={(e) =>
-              handleQuantityChange(selectedItem.id, e.target.value)
+            customInput={TextField}
+            label="Quantity"
+            allowNegative={false}
+            thousandSeparator="."
+            decimalSeparator=","
+            isAllowed={(values) =>
+              values.value === "" || parseInt(values.value) > 0
             }
-            slotProps={{
-              inputLabel: {
-                shrink: true,
-              },
-            }}
+            onValueChange={(values) =>
+              handleQuantityChange(selectedItem.id, values.value)
+            }
           />
           <input
             type="hidden"
@@ -287,6 +209,7 @@ export default function Form({
 
       {/* Total Purchase */}
       <NumericFormat
+        name="totalPurchase"
         value={totalPurchase}
         displayType="input"
         thousandSeparator="."
@@ -300,10 +223,10 @@ export default function Form({
           },
         }}
       />
-      <input type="hidden" name="totalPurchase" value={totalPurchase} />
 
       {/* Grand Total */}
       <NumericFormat
+        name="grandTotal"
         value={totalPurchase + Number(shippingCost)}
         displayType="input"
         thousandSeparator="."
@@ -317,26 +240,14 @@ export default function Form({
           },
         }}
       />
-      <input
-        type="hidden"
-        name="grandTotal"
-        value={totalPurchase + Number(shippingCost)}
-      />
 
       {/* Note */}
-      <TextField
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        id="Note"
-        name="note"
-        label="Note"
-        multiline
-        rows={4}
-      />
+      <TextField id="Note" name="note" label="Note" multiline rows={4} />
 
       {/* Form message alert */}
       {state.message ? <Alert severity="error">{state.message}</Alert> : null}
 
+      {/* Submit / cancel */}
       <Stack spacing={2} direction="row">
         <Button href="/orders" variant="outlined">
           Cancel
@@ -345,6 +256,6 @@ export default function Form({
           Create Invoice
         </Button>
       </Stack>
-    </Box>
+    </Stack>
   );
 }
