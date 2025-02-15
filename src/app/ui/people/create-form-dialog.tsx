@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
@@ -27,11 +26,6 @@ export default function FormDialog({ cancelHref }: { cancelHref: string }) {
         <DialogContent>
           <Form cancelHref={cancelHref} />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} variant="outlined">
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
     </React.Fragment>
   );
