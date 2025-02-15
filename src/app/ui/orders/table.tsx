@@ -20,8 +20,8 @@ export default async function OrdersTable({
 
   return (
     <Paper>
-      <TableContainer>
-        <Table>
+      <TableContainer sx={{ height: 440 }}>
+        <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>Buyer</TableCell>

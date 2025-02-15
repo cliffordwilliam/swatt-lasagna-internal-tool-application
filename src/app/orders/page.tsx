@@ -5,6 +5,7 @@ import Search from "@/app/ui/search";
 import { Button, Stack } from "@mui/material";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import OrdersTableSkeleton from "../ui/skeletons";
 
 export const metadata: Metadata = {
   title: "Invoices",
@@ -30,7 +31,7 @@ export default async function Page(props: {
           Add
         </Button>
       </Stack>
-      <Suspense key={query + currentPage} fallback={<>orders table skeleton</>}>
+      <Suspense key={query + currentPage} fallback={<OrdersTableSkeleton />}>
         <OrdersTable query={query} currentPage={currentPage} />
       </Suspense>
       <Pagination totalPages={totalPages} />

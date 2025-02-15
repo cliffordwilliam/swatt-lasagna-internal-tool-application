@@ -1,6 +1,6 @@
 "use client";
 
-import { createOrder, State } from "@/app/lib/actions";
+import { createOrder, CreateOrderState } from "@/app/lib/actions";
 import {
   ItemField,
   OrderStatusField,
@@ -20,6 +20,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useActionState, useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
+import FormDialog from "../people/create-form-dialog";
 
 export default function Form({
   peoples,
@@ -34,11 +35,16 @@ export default function Form({
   payments: PaymentField[];
   statuses: OrderStatusField[];
 }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: CreateOrderState = { message: null, errors: {} };
   const [state, formAction] = useActionState(createOrder, initialState);
   const [selectedItems, setSelectedItems] = useState<
     { id: string; quantity: string }[]
   >([]);
+  const [selectedBuyerId, setSelectedBuyerId] = useState("");
+  const [selectedRecipientId, setSelectedRecipientId] = useState("");
+  const [selectedPickupDeliveryId, setSelectedPickupDeliveryId] = useState("");
+  const [selectedPaymentId, setSelectedPaymentId] = useState("");
+  const [selectedStatusId, setSelectedStatusId] = useState("");
   const [totalPurchase, setTotalPurchase] = useState(0);
   const [shippingCost, setShippingCost] = useState("");
 
@@ -72,49 +78,122 @@ export default function Form({
 
   return (
     <Stack component="form" action={formAction} noValidate gap={2}>
+      {/* Add people form dialog */}
+      <FormDialog />
       {/* Buyer */}
       <Autocomplete
-        options={peoples}
+        options={peoples.map((option) => ({
+          id: option.id,
+          name: option.name,
+        }))}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         renderInput={(params) => (
-          <TextField {...params} name="buyerId" label="Buyer" />
+          <>
+            <TextField
+              {...params}
+              label="Buyer"
+              error={!!state.errors?.buyerId}
+              helperText={
+                state.errors?.buyerId ? state.errors.buyerId.join(", ") : ""
+              }
+            />
+            <input type="hidden" name="buyerId" value={selectedBuyerId} />
+          </>
         )}
+        onChange={(e, value) => setSelectedBuyerId(value?.id || "")}
       />
 
       {/* Recipient */}
       <Autocomplete
-        options={peoples}
+        options={peoples.map((option) => ({
+          id: option.id,
+          name: option.name,
+        }))}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
+        onChange={(e, value) => setSelectedRecipientId(value?.id || "")}
         renderInput={(params) => (
-          <TextField {...params} name="recipientId" label="Recipient" />
+          <>
+            <TextField
+              {...params}
+              label="Recipient"
+              error={!!state.errors?.recipientId}
+              helperText={
+                state.errors?.recipientId
+                  ? state.errors.recipientId.join(", ")
+                  : ""
+              }
+            />
+            <input
+              type="hidden"
+              name="recipientId"
+              value={selectedRecipientId}
+            />
+          </>
         )}
       />
 
       {/* Order date */}
-      <DatePicker label="Order date" name="orderDate" />
+      <DatePicker
+        label="Order date"
+        name="orderDate"
+        slotProps={{
+          textField: {
+            error: !!state.errors?.orderDate,
+            helperText: state.errors?.orderDate
+              ? state.errors.orderDate.join(", ")
+              : "",
+          },
+        }}
+      />
 
       {/* Delivery date */}
-      <DatePicker label="Delivery date" name="deliveryDate" />
+      <DatePicker
+        label="Delivery date"
+        name="deliveryDate"
+        slotProps={{
+          textField: {
+            error: !!state.errors?.deliveryDate,
+            helperText: state.errors?.deliveryDate
+              ? state.errors.deliveryDate.join(", ")
+              : "",
+          },
+        }}
+      />
 
-      {/* Pickup delivery */}
+      {/* Pickup Delivery */}
       <Autocomplete
-        options={pickupDeliveries}
+        options={pickupDeliveries.map((option) => ({
+          id: option.id,
+          name: option.name,
+        }))}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
+        onChange={(e, value) => setSelectedPickupDeliveryId(value?.id || "")}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            name="pickupDeliveryId"
-            label="Pickup deliveries"
-          />
+          <>
+            <TextField
+              {...params}
+              label="Pickup deliveries"
+              error={!!state.errors?.pickupDeliveryId}
+              helperText={
+                state.errors?.pickupDeliveryId
+                  ? state.errors.pickupDeliveryId.join(", ")
+                  : ""
+              }
+            />
+            <input
+              type="hidden"
+              name="pickupDeliveryId"
+              value={selectedPickupDeliveryId}
+            />
+          </>
         )}
       />
 
       {/* Shipping cost */}
       <NumericFormat
-        name="shippingCost"
         displayType="input"
         thousandSeparator="."
         decimalSeparator=","
@@ -122,7 +201,9 @@ export default function Form({
         customInput={TextField}
         label="Shipping cost"
         error={!!state.errors?.shippingCost}
-        helperText={state.errors?.shippingCost?.[0]}
+        helperText={
+          state.errors?.shippingCost ? state.errors.shippingCost.join(", ") : ""
+        }
         onChange={(e) => {
           const digitOnly = e.target.value.replace(/\D/g, "");
           setShippingCost(digitOnly || "");
@@ -131,24 +212,53 @@ export default function Form({
           values.value === "" || parseInt(values.value) > 0
         }
       />
+      <input type="hidden" name="shippingCost" value={shippingCost} />
 
       {/* Payment */}
       <Autocomplete
-        options={payments}
+        options={payments.map((option) => ({
+          id: option.id,
+          name: option.name,
+        }))}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
+        onChange={(e, value) => setSelectedPaymentId(value?.id || "")}
         renderInput={(params) => (
-          <TextField {...params} name="paymentId" label="Payment" />
+          <>
+            <TextField
+              {...params}
+              label="Payment"
+              error={!!state.errors?.paymentId}
+              helperText={
+                state.errors?.paymentId ? state.errors.paymentId.join(", ") : ""
+              }
+            />
+            <input type="hidden" name="paymentId" value={selectedPaymentId} />
+          </>
         )}
       />
 
       {/* Status */}
       <Autocomplete
-        options={statuses}
+        options={statuses.map((option) => ({
+          id: option.id,
+          name: option.name,
+        }))}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
+        onChange={(e, value) => setSelectedStatusId(value?.id || "")}
         renderInput={(params) => (
-          <TextField {...params} name="statusId" label="Status" />
+          <>
+            <TextField
+              {...params}
+              label="Status"
+              error={!!state.errors?.statusId}
+              helperText={
+                state.errors?.statusId ? state.errors.statusId.join(", ") : ""
+              }
+            />
+            <input type="hidden" name="statusId" value={selectedStatusId} />
+          </>
         )}
       />
 
@@ -160,7 +270,16 @@ export default function Form({
         groupBy={(option) => option.name.split(" ")[0]}
         getOptionLabel={(option) => option.name}
         isOptionEqualToValue={(option, value) => option.id === value.id}
-        renderInput={(params) => <TextField {...params} label="Item" />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Item"
+            error={!!state.errors?.items}
+            helperText={
+              state.errors?.items ? state.errors.items.join(", ") : ""
+            }
+          />
+        )}
         onChange={(event, newValue) => {
           if (newValue) {
             handleItemChange(newValue.id);
@@ -194,7 +313,7 @@ export default function Form({
           />
           <input
             type="hidden"
-            name="items[]"
+            name="items"
             value={`${JSON.stringify(selectedItems)}`}
           />
           <IconButton
@@ -209,7 +328,6 @@ export default function Form({
 
       {/* Total Purchase */}
       <NumericFormat
-        name="totalPurchase"
         value={totalPurchase}
         displayType="input"
         thousandSeparator="."
@@ -222,11 +340,17 @@ export default function Form({
             readOnly: true,
           },
         }}
+        error={!!state.errors?.totalPurchase}
+        helperText={
+          state.errors?.totalPurchase
+            ? state.errors.totalPurchase.join(", ")
+            : ""
+        }
       />
+      <input type="hidden" name="totalPurchase" value={totalPurchase} />
 
       {/* Grand Total */}
       <NumericFormat
-        name="grandTotal"
         value={totalPurchase + Number(shippingCost)}
         displayType="input"
         thousandSeparator="."
@@ -239,10 +363,27 @@ export default function Form({
             readOnly: true,
           },
         }}
+        error={!!state.errors?.grandTotal}
+        helperText={
+          state.errors?.grandTotal ? state.errors.grandTotal.join(", ") : ""
+        }
+      />
+      <input
+        type="hidden"
+        name="grandTotal"
+        value={totalPurchase + Number(shippingCost)}
       />
 
       {/* Note */}
-      <TextField id="Note" name="note" label="Note" multiline rows={4} />
+      <TextField
+        id="note"
+        name="note"
+        label="Note"
+        multiline
+        rows={4}
+        error={!!state.errors?.note}
+        helperText={state.errors?.note ? state.errors.note.join(", ") : ""}
+      />
 
       {/* Form message alert */}
       {state.message ? <Alert severity="error">{state.message}</Alert> : null}

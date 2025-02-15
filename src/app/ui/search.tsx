@@ -26,7 +26,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   }, 300);
 
   return (
-    <FormControl variant="outlined">
+    <FormControl variant="outlined" fullWidth>
       <OutlinedInput
         size="small"
         id="search"
