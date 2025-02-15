@@ -4,9 +4,12 @@ import { createPeople, CreatePeopleState } from "@/app/lib/actions";
 import { Alert, Button, Stack, TextField } from "@mui/material";
 import { useActionState } from "react";
 
-export default function Form() {
+export default function Form({ cancelHref }: { cancelHref: string }) {
   const initialState: CreatePeopleState = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createPeople, initialState);
+  const [state, formAction, isPending] = useActionState(
+    createPeople,
+    initialState
+  );
 
   return (
     <Stack component="form" action={formAction} noValidate gap={2}>
@@ -46,10 +49,10 @@ export default function Form() {
 
       {/* Submit / cancel */}
       <Stack spacing={2} direction="row">
-        <Button href="/orders" variant="outlined">
+        <Button href={cancelHref} variant="outlined">
           Cancel
         </Button>
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" loading={isPending}>
           Create People
         </Button>
       </Stack>

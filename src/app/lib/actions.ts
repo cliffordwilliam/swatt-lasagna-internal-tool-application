@@ -85,7 +85,7 @@ export async function createOrder(
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create Invoice.",
+      message: "Missing Fields. Failed to Create Order.",
     };
   }
 
@@ -131,11 +131,11 @@ export async function createOrder(
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {
-      message: `Database Error: Failed to Create Invoice. ${error}`,
+      message: `Database Error: Failed to Create Order. ${error}`,
     };
   }
 
-  // Revalidate the cache for the invoices page and redirect the user.
+  // Revalidate the cache for the orders page and redirect the user.
   revalidatePath("/orders");
   redirect("/orders");
 }
@@ -170,7 +170,7 @@ export async function createPeople(
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create Invoice.",
+      message: "Missing Fields. Failed to Create Person.",
     };
   }
 
@@ -193,7 +193,7 @@ export async function createPeople(
     };
   }
 
-  // Revalidate the cache for the invoices page and redirect the user.
+  // Revalidate the cache for the persons page and redirect the user.
   revalidatePath("/orders/create");
   redirect("/orders/create");
 }

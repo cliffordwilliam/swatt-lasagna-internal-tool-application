@@ -36,7 +36,10 @@ export default function Form({
   statuses: OrderStatusField[];
 }) {
   const initialState: CreateOrderState = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createOrder, initialState);
+  const [state, formAction, isPending] = useActionState(
+    createOrder,
+    initialState
+  );
   const [selectedItems, setSelectedItems] = useState<
     { id: string; quantity: string }[]
   >([]);
@@ -79,7 +82,7 @@ export default function Form({
   return (
     <Stack component="form" action={formAction} noValidate gap={2}>
       {/* Add people form dialog */}
-      <FormDialog />
+      <FormDialog cancelHref="/orders/create" />
       {/* Buyer */}
       <Autocomplete
         options={peoples.map((option) => ({
@@ -393,8 +396,8 @@ export default function Form({
         <Button href="/orders" variant="outlined">
           Cancel
         </Button>
-        <Button type="submit" variant="contained">
-          Create Invoice
+        <Button type="submit" variant="contained" loading={isPending}>
+          Create Order
         </Button>
       </Stack>
     </Stack>

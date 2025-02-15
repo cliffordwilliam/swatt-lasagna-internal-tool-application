@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import OrdersTableSkeleton from "../ui/skeletons";
 
 export const metadata: Metadata = {
-  title: "Invoices",
+  title: "Orders",
 };
 
 export default async function Page(props: {
@@ -26,7 +26,7 @@ export default async function Page(props: {
   return (
     <Stack spacing={2}>
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search placeholder="Search invoices..." />
+        <Search placeholder="Search orders..." />
         <Button variant="contained" href="/orders/create">
           Add
         </Button>

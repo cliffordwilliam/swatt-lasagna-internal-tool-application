@@ -9,7 +9,7 @@ import Form from "@/app/ui/orders/create-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Invoice",
+  title: "Create Order",
 };
 
 export default async function Page() {

@@ -1,13 +1,12 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Stack } from "@mui/material";
+import * as React from "react";
 import Form from "./create-form";
 
-export default function FormDialog() {
+export default function FormDialog({ cancelHref }: { cancelHref: string }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -23,17 +22,15 @@ export default function FormDialog() {
       <Button variant="outlined" onClick={handleClickOpen}>
         Add People
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} fullScreen>
         <DialogTitle>Create People</DialogTitle>
         <DialogContent>
-          <Form />
+          <Form cancelHref={cancelHref} />
         </DialogContent>
         <DialogActions>
-          <Stack spacing={2} direction="row">
-            <Button onClick={handleClose} variant="outlined">
-              Cancel
-            </Button>
-          </Stack>
+          <Button onClick={handleClose} variant="outlined">
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
