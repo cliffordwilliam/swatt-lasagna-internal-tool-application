@@ -4,7 +4,7 @@ import { createPeople, CreatePeopleState } from "@/app/lib/actions";
 import { Alert, Button, Stack, TextField } from "@mui/material";
 import { useActionState } from "react";
 
-export default function Form({ cancelHref }: { cancelHref: string }) {
+export default function Form({ isInDialog }: { isInDialog: boolean }) {
   const initialState: CreatePeopleState = { message: null, errors: {} };
   const [state, formAction, isPending] = useActionState(
     createPeople,
@@ -49,9 +49,11 @@ export default function Form({ cancelHref }: { cancelHref: string }) {
 
       {/* Submit / cancel */}
       <Stack spacing={2} direction="row">
-        <Button href={cancelHref} variant="outlined">
-          Cancel
-        </Button>
+        {!isInDialog && (
+          <Button href="/customers" variant="outlined">
+            Cancel
+          </Button>
+        )}
         <Button type="submit" variant="contained" loading={isPending}>
           Create People
         </Button>

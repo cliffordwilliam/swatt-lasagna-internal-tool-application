@@ -4,8 +4,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
 import Form from "./create-form";
+import { IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
-export default function FormDialog({ cancelHref }: { cancelHref: string }) {
+export default function FormDialog({ isInDialog }: { isInDialog: boolean }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -23,8 +25,20 @@ export default function FormDialog({ cancelHref }: { cancelHref: string }) {
       </Button>
       <Dialog open={open} onClose={handleClose} fullScreen>
         <DialogTitle>Create People</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={(theme) => ({
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: theme.palette.grey[500],
+          })}
+        >
+          <Close />
+        </IconButton>
         <DialogContent>
-          <Form cancelHref={cancelHref} />
+          <Form isInDialog={isInDialog} />
         </DialogContent>
       </Dialog>
     </React.Fragment>

@@ -82,7 +82,8 @@ export default function Form({
   return (
     <Stack component="form" action={formAction} noValidate gap={2}>
       {/* Add people form dialog */}
-      <FormDialog cancelHref="/orders/create" />
+      <FormDialog isInDialog={true} />
+
       {/* Buyer */}
       <Autocomplete
         options={peoples.map((option) => ({
