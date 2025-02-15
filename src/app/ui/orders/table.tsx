@@ -1,13 +1,15 @@
 import { fetchFilteredOrders } from "@/app/lib/data";
 import { formatDateToLocal } from "@/app/lib/utils";
-import * as React from "react";
+import { Delete } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
+import { IconButton } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 
 export default async function OrdersTable({
   query,
@@ -29,6 +31,7 @@ export default async function OrdersTable({
               <TableCell>Total Purchase</TableCell>
               <TableCell>Order Date</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -41,6 +44,17 @@ export default async function OrdersTable({
                   {formatDateToLocal(order.orderDate.toISOString())}
                 </TableCell>
                 <TableCell>{order.status.name}</TableCell>
+                <TableCell>
+                  <IconButton
+                    href={`/orders/${order.id}/edit`}
+                    aria-label="delete"
+                  >
+                    <EditIcon color="success" />
+                  </IconButton>
+                  <IconButton aria-label="edit">
+                    <Delete color="warning" />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
