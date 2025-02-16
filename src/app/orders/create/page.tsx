@@ -21,6 +21,7 @@ export default async function Page() {
       fetchPayments(),
       fetchOrderstatuses(),
     ]);
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   return (
     <main>

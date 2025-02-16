@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { Button, Stack, TextField } from "@mui/material";
 
 export default function OrdersTableSkeleton() {
   return (
@@ -54,5 +55,38 @@ export default function OrdersTableSkeleton() {
         </Table>
       </TableContainer>
     </Paper>
+  );
+}
+
+export function OrdersFormSkeleton() {
+  return (
+    <Stack gap={2}>
+      {/* Add people form dialog */}
+      <Skeleton variant="rectangular" width="100%">
+        <Button>.</Button>
+      </Skeleton>
+
+      {/* Other fields */}
+      {[...Array(11)].map((_, index) => (
+        <Skeleton variant="rectangular" width="100%" key={index}>
+          <TextField />
+        </Skeleton>
+      ))}
+
+      {/* Note */}
+      <Skeleton variant="rectangular" width="100%">
+        <TextField multiline rows={4} />
+      </Skeleton>
+
+      {/* Submit / cancel */}
+      <Stack spacing={2} direction="row">
+        <Skeleton variant="rectangular">
+          <Button>Cancel</Button>
+        </Skeleton>
+        <Skeleton variant="rectangular">
+          <Button>Create Order</Button>
+        </Skeleton>
+      </Stack>
+    </Stack>
   );
 }

@@ -1,3 +1,5 @@
+import { OrdersFormSkeleton } from "@/app/ui/skeletons";
+
 export default function Loading() {
-  return "order form skeleton";
+  return <OrdersFormSkeleton />;
 }
