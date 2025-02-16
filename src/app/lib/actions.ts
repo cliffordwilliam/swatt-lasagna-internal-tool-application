@@ -5,6 +5,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+export async function deleteOrder(id: string) {
+  await prisma.order.delete({
+    where: { id },
+  });
+  revalidatePath("/orders");
+}
+
 export type CreateOrderState = {
   errors?: {
     buyerId?: string[];

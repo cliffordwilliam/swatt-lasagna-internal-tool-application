@@ -34,7 +34,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <main>
-      edit form {id}
       <Form
         order={order}
         peoples={peoples}
