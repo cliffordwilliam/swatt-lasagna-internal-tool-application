@@ -14,11 +14,20 @@ import { DeleteInvoice } from "./buttons";
 export default async function OrdersTable({
   query,
   currentPage,
+  startDate,
+  endDate,
 }: {
   query: string;
   currentPage: number;
+  startDate: string | null;
+  endDate: string | null;
 }) {
-  const orders = await fetchFilteredOrders(query, currentPage);
+  const orders = await fetchFilteredOrders(
+    query,
+    currentPage,
+    startDate,
+    endDate
+  );
 
   return (
     <Paper>

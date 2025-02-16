@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import dayjs from "dayjs";
 
 export async function fetchItems() {
   try {
@@ -37,26 +38,41 @@ export async function fetchOrderstatuses() {
 }
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredOrders(query: string, currentPage: number) {
+export async function fetchFilteredOrders(
+  query: string,
+  currentPage: number,
+  startDate: string | null,
+  endDate: string | null
+) {
   const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  let dateFilters = {};
+  if (startDate || endDate) {
+    dateFilters = {
+      orderDate: {
+        gte: startDate ? dayjs(startDate).startOf("day").toDate() : undefined,
+        lte: endDate ? dayjs(endDate).endOf("day").toDate() : undefined,
+      },
+    };
+  }
 
   try {
     const orders = await prisma.order.findMany({
       where: {
-        OR: [
-          { buyer: { name: { contains: query, mode: "insensitive" } } },
-          { recipient: { name: { contains: query, mode: "insensitive" } } },
+        AND: [
           {
-            totalPurchase: {
-              equals: isNaN(Number(query)) ? undefined : Number(query),
-            },
+            OR: [
+              { buyer: { name: { contains: query, mode: "insensitive" } } },
+              { recipient: { name: { contains: query, mode: "insensitive" } } },
+              {
+                totalPurchase: {
+                  equals: isNaN(Number(query)) ? undefined : Number(query),
+                },
+              },
+              { status: { name: { contains: query, mode: "insensitive" } } },
+            ],
           },
-          {
-            orderDate: {
-              equals: isNaN(Date.parse(query)) ? undefined : new Date(query),
-            },
-          },
-          { status: { name: { contains: query, mode: "insensitive" } } },
+          dateFilters, // Apply date range filter
         ],
       },
       orderBy: {
@@ -146,7 +162,7 @@ export async function fetchOrderById(id: string) {
       },
     });
 
-    return order
+    return order;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch order.");
