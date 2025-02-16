@@ -5,22 +5,27 @@ import { FormControl, InputAdornment, OutlinedInput } from "@mui/material";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
-export default function Search({ placeholder }: { placeholder: string }) {
+interface SearchProps {
+  placeholder: string;
+  queryKey?: string;
+}
+
+export default function Search({
+  placeholder,
+  queryKey = "query",
+}: SearchProps) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
 
   const handleSearch = useDebouncedCallback((term: string) => {
-    console.log(`Searching... ${term}`);
-
     const params = new URLSearchParams(searchParams);
-
     params.set("page", "1");
 
     if (term) {
-      params.set("query", term);
+      params.set(queryKey, term);
     } else {
-      params.delete("query");
+      params.delete(queryKey);
     }
     replace(`${pathname}?${params.toString()}`);
   }, 300);
@@ -28,7 +33,6 @@ export default function Search({ placeholder }: { placeholder: string }) {
   return (
     <FormControl variant="outlined" fullWidth>
       <OutlinedInput
-        size="small"
         id="search"
         sx={{ flexGrow: 1 }}
         startAdornment={
@@ -40,10 +44,8 @@ export default function Search({ placeholder }: { placeholder: string }) {
           "aria-label": "search",
         }}
         placeholder={placeholder}
-        onChange={(e) => {
-          handleSearch(e.target.value);
-        }}
-        defaultValue={searchParams.get("query")?.toString()}
+        onChange={(e) => handleSearch(e.target.value)}
+        defaultValue={searchParams.get(queryKey)?.toString()}
       />
     </FormControl>
   );

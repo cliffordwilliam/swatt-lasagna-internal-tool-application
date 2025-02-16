@@ -18,6 +18,7 @@ export default async function Page(props: {
     page?: string;
     orderStartDate?: string;
     orderEndDate?: string;
+    itemName?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
@@ -25,6 +26,7 @@ export default async function Page(props: {
   const currentPage = Number(searchParams?.page) || 1;
   const startDate = searchParams?.orderStartDate || null;
   const endDate = searchParams?.orderEndDate || null;
+  const itemName = searchParams?.itemName || null;
 
   const totalPages = await fetchOrdersPages(query);
 
@@ -40,12 +42,14 @@ export default async function Page(props: {
         <SearchDate keyName="orderStartDate" label="Start order date" />
         <SearchDate keyName="orderEndDate" label="End order date" />
       </Stack>
+      <Search placeholder="Search by items..." queryKey="itemName" />
       <Suspense key={query + currentPage} fallback={<OrdersTableSkeleton />}>
         <OrdersTable
           query={query}
           currentPage={currentPage}
           startDate={startDate}
           endDate={endDate}
+          itemName={itemName}
         />
       </Suspense>
       <Pagination totalPages={totalPages} />

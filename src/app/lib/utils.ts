@@ -10,3 +10,6 @@ export const formatDateToLocal = (
   };
   return new Intl.DateTimeFormat(locale, options).format(date);
 };
+
+export const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("id-ID").format(value);

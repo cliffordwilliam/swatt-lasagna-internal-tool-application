@@ -42,7 +42,8 @@ export async function fetchFilteredOrders(
   query: string,
   currentPage: number,
   startDate: string | null,
-  endDate: string | null
+  endDate: string | null,
+  itemName?: string | null
 ) {
   const skip = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -55,6 +56,18 @@ export async function fetchFilteredOrders(
       },
     };
   }
+
+  const itemFilters = itemName
+    ? {
+        items: {
+          some: {
+            item: {
+              name: { contains: itemName, mode: "insensitive" },
+            },
+          },
+        },
+      }
+    : {};
 
   try {
     const orders = await prisma.order.findMany({
@@ -73,6 +86,7 @@ export async function fetchFilteredOrders(
             ],
           },
           dateFilters, // Apply date range filter
+          itemFilters, // Apply item name filter if provided
         ],
       },
       orderBy: {
@@ -84,6 +98,9 @@ export async function fetchFilteredOrders(
         buyer: { select: { name: true } },
         recipient: { select: { name: true } },
         status: { select: { name: true } },
+        payment: { select: { name: true } },
+        pickupDelivery: { select: { name: true } },
+        items: { select: { item: true, quantity: true } },
       },
     });
 

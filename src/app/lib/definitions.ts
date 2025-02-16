@@ -79,3 +79,45 @@ export type Item = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type OrderTableRow = {
+  id: string;
+  buyerId: string;
+  recipientId: string;
+  orderDate: Date;
+  deliveryDate: Date;
+  totalPurchase: number;
+  pickupDeliveryId: string;
+  shippingCost: number;
+  grandTotal: number;
+  paymentId: string;
+  orderStatusId: string;
+  note: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  buyer: {
+    name: string;
+  };
+  recipient: {
+    name: string;
+  };
+  pickupDelivery: {
+    name: string;
+  };
+  payment: {
+    name: string;
+  };
+  status: {
+    name: string;
+  };
+  items: {
+    item: {
+      id: string;
+      name: string;
+      price: number;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    quantity: number;
+  }[];
+};

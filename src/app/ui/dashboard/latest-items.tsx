@@ -6,6 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
+import { formatCurrency } from "@/app/lib/utils";
 
 export default async function LatestItems() {
   const latestItems = await fetchItems();
@@ -21,7 +22,7 @@ export default async function LatestItems() {
           </ListItemAvatar>
           <ListItemText
             primary={item.name}
-            secondary={`Price: Rp ${item.price.toLocaleString()}`}
+            secondary={`Price: Rp ${formatCurrency(item.price)}`}
           />
         </ListItem>
       ))}

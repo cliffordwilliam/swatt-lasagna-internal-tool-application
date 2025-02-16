@@ -15,11 +15,19 @@ export default function OrdersTableSkeleton() {
         <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
+              <TableCell />
               <TableCell>Buyer</TableCell>
               <TableCell>Recipient</TableCell>
               <TableCell>Total Purchase</TableCell>
               <TableCell>Order Date</TableCell>
+              <TableCell>Delivery Date</TableCell>
+              <TableCell>Grand Total</TableCell>
+              <TableCell>Payment Method</TableCell>
+              <TableCell>Pickup Delivery</TableCell>
+              <TableCell>Shipping Cost</TableCell>
+              <TableCell>Note</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
