@@ -127,3 +127,28 @@ export async function fetchPeople() {
     throw new Error("Failed to fetch all people.");
   }
 }
+
+export async function fetchOrderById(id: string) {
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        buyer: true,
+        recipient: true,
+        payment: true,
+        pickupDelivery: true,
+        status: true,
+        items: {
+          include: {
+            item: true,
+          },
+        },
+      },
+    });
+
+    return order
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch order.");
+  }
+}

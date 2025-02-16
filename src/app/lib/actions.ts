@@ -140,6 +140,96 @@ export async function createOrder(
   redirect("/orders");
 }
 
+export async function updateOrder(
+  id: string,
+  prevState: CreateOrderState,
+  formData: FormData
+) {
+  // Validate form fields using Zod
+  const validatedFields = CreateOrderFormSchema.safeParse({
+    buyerId: formData.get("buyerId"),
+    recipientId: formData.get("recipientId"),
+    orderDate: formData.get("orderDate"),
+    deliveryDate: formData.get("deliveryDate"),
+    totalPurchase: formData.get("totalPurchase"),
+    pickupDeliveryId: formData.get("pickupDeliveryId"),
+    shippingCost: formData.get("shippingCost"),
+    grandTotal: formData.get("grandTotal"),
+    paymentId: formData.get("paymentId"),
+    statusId: formData.get("statusId"),
+    items: JSON.parse(String(formData.get("items"))),
+    note: formData.get("note"),
+  });
+
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Update Order.",
+    };
+  }
+
+  // Prepare data for updating the database
+  const {
+    buyerId,
+    recipientId,
+    orderDate,
+    deliveryDate,
+    totalPurchase,
+    pickupDeliveryId,
+    shippingCost,
+    grandTotal,
+    paymentId,
+    statusId,
+    items,
+    note,
+  } = validatedFields.data;
+
+  try {
+    await prisma.$transaction([
+      // Update the order details
+      prisma.order.update({
+        where: { id },
+        data: {
+          buyerId,
+          recipientId,
+          orderDate: new Date(orderDate),
+          deliveryDate: new Date(deliveryDate),
+          totalPurchase,
+          pickupDeliveryId,
+          shippingCost,
+          grandTotal,
+          paymentId,
+          orderStatusId: statusId,
+          note,
+        },
+      }),
+
+      // Remove old order items
+      prisma.orderItem.deleteMany({
+        where: { orderId: id },
+      }),
+
+      // Insert new order items
+      prisma.orderItem.createMany({
+        data: items.map((item) => ({
+          orderId: id,
+          itemId: item.id,
+          quantity: item.quantity,
+        })),
+      }),
+    ]);
+  } catch (error) {
+    return {
+      message: `Database Error: Failed to Update Order. ${error}`,
+    };
+  }
+
+  // Revalidate the cache for the orders page and redirect the user.
+  revalidatePath("/orders");
+  redirect("/orders");
+}
+
 export type CreatePeopleState = {
   errors?: {
     name?: string[];
