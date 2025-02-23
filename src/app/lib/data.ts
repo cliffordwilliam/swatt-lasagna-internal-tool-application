@@ -50,7 +50,7 @@ export async function fetchFilteredOrders(
   let dateFilters = {};
   if (startDate || endDate) {
     dateFilters = {
-      orderDate: {
+      deliveryDate: {
         gte: startDate ? dayjs(startDate).startOf("day").toDate() : undefined,
         lte: endDate ? dayjs(endDate).endOf("day").toDate() : undefined,
       },
@@ -85,12 +85,12 @@ export async function fetchFilteredOrders(
               { status: { name: { contains: query, mode: "insensitive" } } },
             ],
           },
-          dateFilters, // Apply date range filter
+          dateFilters, // Apply deliveryDate range filter instead of orderDate
           itemFilters, // Apply item name filter if provided
         ],
       },
       orderBy: {
-        orderDate: "desc",
+        deliveryDate: "desc", // Ensure results are ordered by deliveryDate
       },
       skip,
       take: ITEMS_PER_PAGE,
