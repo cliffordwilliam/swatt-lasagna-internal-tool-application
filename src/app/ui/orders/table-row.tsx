@@ -42,6 +42,7 @@ export default function Row({ order }: { order: OrderTableRow }) {
         <TableCell>{order.pickupDelivery.name}</TableCell>
         <TableCell>{`Rp ${formatCurrency(order.shippingCost)}`}</TableCell>
         <TableCell>{order.note}</TableCell>
+        <TableCell>{order.po}</TableCell>
         <TableCell>{order.status.name}</TableCell>
         <TableCell>
           <IconButton href={`/orders/${order.id}/edit`}>

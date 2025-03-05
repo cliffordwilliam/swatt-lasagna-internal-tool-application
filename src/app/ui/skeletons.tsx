@@ -88,7 +88,7 @@ export function OrdersFormSkeleton() {
       </Skeleton>
 
       {/* Other fields */}
-      {[...Array(11)].map((_, index) => (
+      {[...Array(12)].map((_, index) => (
         <Skeleton variant="rectangular" width="100%" key={index}>
           <TextField />
         </Skeleton>

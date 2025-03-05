@@ -24,6 +24,7 @@ model Item {
 
 model Order {
   id              String         @id @default(cuid())
+  po              String         @default("")
   buyer           Person         @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Restrict)
   buyerId         String
   recipient       Person         @relation("RecipientOrders", fields: [recipientId], references: [id], onDelete: Restrict)

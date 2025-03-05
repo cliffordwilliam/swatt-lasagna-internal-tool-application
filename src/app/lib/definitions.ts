@@ -39,6 +39,7 @@ export type Order = {
   paymentId: string;
   orderStatusId: string;
   note: string | null;
+  po: string;
   createdAt: Date;
   updatedAt: Date;
   buyer: Person;
@@ -93,6 +94,7 @@ export type OrderTableRow = {
   paymentId: string;
   orderStatusId: string;
   note: string | null;
+  po: string;
   createdAt: Date;
   updatedAt: Date;
   buyer: {

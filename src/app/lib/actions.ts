@@ -26,6 +26,7 @@ export type CreateOrderState = {
     statusId?: string[];
     items?: string[];
     note?: string[];
+    po?: string[];
   };
   message?: string | null;
 };
@@ -66,6 +67,7 @@ const CreateOrderFormSchema = z.object({
     .transform(Number)
     .refine((val) => val >= 0, "Grand total must be non-negative"),
   note: z.string().optional(),
+  po: z.string(),
 });
 
 export async function createOrder(
@@ -86,6 +88,7 @@ export async function createOrder(
     statusId: formData.get("statusId"),
     items: JSON.parse(String(formData.get("items"))),
     note: formData.get("note"),
+    po: formData.get("po"),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -110,6 +113,7 @@ export async function createOrder(
     statusId,
     items,
     note,
+    po,
   } = validatedFields.data;
 
   // Insert data into the database
@@ -127,6 +131,7 @@ export async function createOrder(
         paymentId,
         orderStatusId: statusId,
         note,
+        po,
         items: {
           create: items.map((item) => ({
             itemId: item.id,
@@ -166,6 +171,7 @@ export async function updateOrder(
     statusId: formData.get("statusId"),
     items: JSON.parse(String(formData.get("items"))),
     note: formData.get("note"),
+    po: formData.get("po"),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -190,6 +196,7 @@ export async function updateOrder(
     statusId,
     items,
     note,
+    po,
   } = validatedFields.data;
 
   try {
@@ -209,6 +216,7 @@ export async function updateOrder(
           paymentId,
           orderStatusId: statusId,
           note,
+          po,
         },
       }),
 

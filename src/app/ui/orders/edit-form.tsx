@@ -66,6 +66,7 @@ export default function Form({
     order.shippingCost.toString()
   );
   const [note, setNote] = useState(order.note);
+  const [po, setPo] = useState(order.po);
 
   useEffect(() => {
     const total = selectedItems.reduce((sum, selectedItem) => {
@@ -403,6 +404,17 @@ export default function Form({
         type="hidden"
         name="grandTotal"
         value={totalPurchase + Number(shippingCost)}
+      />
+
+      {/* Po */}
+      <TextField
+        value={po}
+        onChange={(e) => setPo(e.target.value)}
+        id="po"
+        name="po"
+        label="Po"
+        error={!!state.errors?.po}
+        helperText={state.errors?.po ? state.errors.po.join(", ") : ""}
       />
 
       {/* Note */}

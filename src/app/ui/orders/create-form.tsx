@@ -378,6 +378,15 @@ export default function Form({
         value={totalPurchase + Number(shippingCost)}
       />
 
+      {/* Po */}
+      <TextField
+        id="po"
+        name="po"
+        label="Po"
+        error={!!state.errors?.po}
+        helperText={state.errors?.po ? state.errors.po.join(", ") : ""}
+      />
+
       {/* Note */}
       <TextField
         id="note"

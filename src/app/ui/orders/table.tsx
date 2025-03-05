@@ -46,6 +46,7 @@ export default async function OrdersTable({
               <TableCell>Pickup Delivery</TableCell>
               <TableCell>Shipping Cost</TableCell>
               <TableCell>Note</TableCell>
+              <TableCell>Po</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
