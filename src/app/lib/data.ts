@@ -38,6 +38,45 @@ export async function fetchOrderstatuses() {
 }
 
 const ITEMS_PER_PAGE = 6;
+export async function fetchItemsPages(query: string) {
+  try {
+    const totalItems = await prisma.item.count({
+      where: {
+        name: { contains: query, mode: "insensitive" }, // Filter items by name
+      },
+    });
+
+    return Math.ceil(totalItems / ITEMS_PER_PAGE);
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch total number of items.");
+  }
+}
+
+export async function getItemsByName(name: string, currentPage: number) {
+  const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const items = await prisma.item.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: "insensitive", // Case-insensitive search
+        },
+      },
+      skip,
+      take: ITEMS_PER_PAGE, // Pagination limit
+    });
+
+    return items;
+  } catch (error) {
+    console.error("Error fetching items by name:", error);
+    throw new Error("Failed to fetch items.");
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 export async function fetchFilteredOrders(
   query: string,
   currentPage: number,

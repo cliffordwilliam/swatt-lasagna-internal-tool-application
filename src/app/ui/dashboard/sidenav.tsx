@@ -22,6 +22,7 @@ import * as React from "react";
 import ColorModeIconDropdown from "../color-mode-icon-dropdown";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import EmojiFoodBeverageIcon from '@mui/icons-material/EmojiFoodBeverage';
 
 const drawerWidth = 240;
 
@@ -33,6 +34,7 @@ const links = [
     icon: <DocumentDuplicateIcon />,
   },
   { name: "Customers", href: "/customers", icon: <UserGroupIcon /> },
+  { name: "Items", href: "/items", icon: <EmojiFoodBeverageIcon /> },
 ];
 
 interface LayoutProps {

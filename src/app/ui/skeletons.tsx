@@ -111,3 +111,44 @@ export function OrdersFormSkeleton() {
     </Stack>
   );
 }
+
+export function ItemsTableSkeleton() {
+  return (
+    <Paper>
+      <TableContainer sx={{ height: 440 }}>
+        <Table size="small" stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Created At</TableCell>
+              <TableCell>Updated At</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {[...Array(6)].map((_, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <Skeleton variant="text" width={80} />
+                </TableCell>
+                <TableCell>
+                  <Skeleton variant="text" width={120} />
+                </TableCell>
+                <TableCell>
+                  <Skeleton variant="text" width={80} />
+                </TableCell>
+                <TableCell>
+                  <Skeleton variant="text" width={100} />
+                </TableCell>
+                <TableCell>
+                  <Skeleton variant="text" width={100} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
+  );
+}
